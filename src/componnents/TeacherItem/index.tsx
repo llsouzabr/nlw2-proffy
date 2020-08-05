@@ -3,33 +3,52 @@ import React from 'react';
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
 
 import './styles.css';
+import api from '../../services/api';
 
-function TeacherItem() {
+export interface Teacher {
+    id: number;
+    subject: string;
+    cost: number;
+    // user_id: number;
+    name: string;
+    avatar: string;
+    whatsapp: string;
+    bio: string;
+}
+
+interface TeacherItemProps {
+    teacher: Teacher
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ( {teacher}  ) => {
+
+    function createNewConnection() {
+        api.post('connections', {
+            user_id: teacher.id
+        })
+    }
+
     return (
         <article className="teacher-item">
         <header>
-            <img src="https://avatars1.githubusercontent.com/u/30079181?s=460&u=cd6dbdfcb3e7cb7049a538d300924be637991d37&v=4" alt="Leonardo Souza"/>
+            <img src={teacher.avatar} alt={teacher.name}/>
             <div>
-                <strong>Leonardo Souza</strong>
-                <span>Química</span>
+                <strong>{teacher.name}</strong>
+                <span>{teacher.subject}</span>
             </div>
         </header>
 
-        <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-            <br/><br/>
-            Optio, eaque doloremque soluta eveniet quisquam aperiam unde ad excepturi ratione officiis reprehenderit repellat, ipsa quae quibusdam architecto facilis repudiandae nam in.
-        </p>
+        <p>{teacher.bio}</p>
 
         <footer>
             <p>
                 Preço/Hora 
-                <strong>R$50,00</strong>
+                <strong>R$ {teacher.cost}</strong>
             </p>
-            <button type="button">
-                <img src={whatsappIcon} alt="Entrar em contato com whatsapp"/>
-                Entrar em contato
-            </button>
+                <a href={`https://wa.me/${teacher.whatsapp}`} target="_blank" onClick={createNewConnection}>
+                    <img src={whatsappIcon} alt="Entrar em contato com whatsapp"/>
+                    Entrar em contato
+                </a>
         </footer>
 
     </article>
